@@ -311,6 +311,249 @@
                 </div>
             </t>
         </template>
-        
+
+        <!-- Event List Page -->
+        <template id="event_list" name="Event List">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <div class="container py-5">
+                        <div class="row">
+                            <div class="col-lg-12 text-center mb-5">
+                                <h1 class="display-4">Upcoming Events</h1>
+                                <p class="lead">Join our community events and workshops</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <t t-foreach="events" t-as="event">
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title" t-field="event.name"/>
+                                            <p class="card-text" t-field="event.description"/>
+                                            <p class="text-muted">
+                                                <i class="fa fa-calendar"/> <span t-field="event.date_begin" t-options="{'widget': 'datetime'}"/>
+                                            </p>
+                                            <p class="text-muted">
+                                                <i class="fa fa-users"/> <span t-esc="event.seats_max"/> seats
+                                            </p>
+                                        </div>
+                                        <div class="card-footer">
+                                            <a t-attf-href="/coworking/event/#{event.id}" class="btn btn-primary">View Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Event Detail Page -->
+        <template id="event_detail" name="Event Detail">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <div class="container py-5">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <h1 t-field="event.name"/>
+                                <p class="lead" t-field="event.description"/>
+
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <h5>Event Details</h5>
+                                        <p><strong>Date:</strong> <span t-field="event.date_begin" t-options="{'widget': 'datetime'}"/></p>
+                                        <p><strong>Duration:</strong> <span t-field="event.duration"/> hours</p>
+                                        <p><strong>Location:</strong> <span t-field="event.location"/></p>
+                                        <p><strong>Capacity:</strong> <span t-esc="event.seats_max"/> people</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5>Pricing</h5>
+                                        <p><strong>Price:</strong> €<span t-esc="price"/></p>
+                                        <t t-if="membership">
+                                            <p class="text-success">✓ Member discount applied</p>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Register for Event</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="/coworking/event/register" method="post">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="event_id" t-att-value="event.id"/>
+                                            <div class="mb-3">
+                                                <label class="form-label">Name</label>
+                                                <input type="text" name="name" class="form-control" required="required"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Email</label>
+                                                <input type="email" name="email" class="form-control" required="required"/>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary w-100">Register Now</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Membership Plans Page -->
+        <template id="membership_plans" name="Membership Plans">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <div class="container py-5">
+                        <div class="row">
+                            <div class="col-lg-12 text-center mb-5">
+                                <h1 class="display-4">Membership Plans</h1>
+                                <p class="lead">Choose the perfect plan for your coworking needs</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <t t-foreach="plans" t-as="plan">
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header text-center">
+                                            <h4 t-field="plan.name"/>
+                                            <h2 class="text-primary">€<span t-field="plan.monthly_price"/>/month</h2>
+                                        </div>
+                                        <div class="card-body">
+                                            <p t-field="plan.description"/>
+                                            <ul class="list-unstyled">
+                                                <li><i class="fa fa-check text-success"/> Coworking Access: <span t-field="plan.coworking_access"/></li>
+                                                <li><i class="fa fa-check text-success"/> Meeting Rooms: <span t-field="plan.meeting_room_access"/></li>
+                                                <li><i class="fa fa-check text-success"/> Events: <span t-field="plan.event_access"/></li>
+                                            </ul>
+                                        </div>
+                                        <div class="card-footer text-center">
+                                            <a href="/web/signup" class="btn btn-primary">Choose Plan</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Booking Calendar Page -->
+        <template id="booking_calendar" name="Booking Calendar">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <div class="container py-5">
+                        <div class="row">
+                            <div class="col-lg-12 text-center mb-5">
+                                <h1 class="display-4">Booking Calendar</h1>
+                                <p class="lead">View and book available time slots</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Rooms</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-check" t-foreach="rooms" t-as="room">
+                                            <input class="form-check-input room-filter" type="checkbox"
+                                                   t-att-value="room.id" t-att-id="'room_' + str(room.id)" checked="checked"/>
+                                            <label class="form-check-label" t-att-for="'room_' + str(room.id)">
+                                                <span t-field="room.name"/>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-9">
+                                <div id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar CSS and JS -->
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css"/>
+                <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var calendarEl = document.getElementById('calendar');
+                        var calendar = new FullCalendar.Calendar(calendarEl, {
+                            initialView: 'timeGridWeek',
+                            headerToolbar: {
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                            },
+                            slotMinTime: '08:00:00',
+                            slotMaxTime: '22:00:00',
+                            businessHours: {
+                                daysOfWeek: [1, 2, 3, 4, 5, 6],
+                                startTime: '08:00',
+                                endTime: '20:00'
+                            },
+                            events: function(info, successCallback, failureCallback) {
+                                var roomIds = [];
+                                document.querySelectorAll('.room-filter:checked').forEach(function(checkbox) {
+                                    roomIds.push(parseInt(checkbox.value));
+                                });
+
+                                fetch('/coworking/api/calendar/events', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        jsonrpc: '2.0',
+                                        method: 'call',
+                                        params: {
+                                            start: info.startStr,
+                                            end: info.endStr,
+                                            room_ids: roomIds
+                                        }
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.result) {
+                                        successCallback(data.result);
+                                    } else {
+                                        failureCallback();
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    failureCallback();
+                                });
+                            },
+                            eventClick: function(info) {
+                                if (info.event.extendedProps.available) {
+                                    // Redirect to booking page
+                                    window.location.href = '/coworking/book/' + info.event.extendedProps.room_id +
+                                        '?start=' + info.event.startStr + '&amp;end=' + info.event.endStr;
+                                }
+                            }
+                        });
+
+                        calendar.render();
+
+                        // Update calendar when room filters change
+                        document.querySelectorAll('.room-filter').forEach(function(checkbox) {
+                            checkbox.addEventListener('change', function() {
+                                calendar.refetchEvents();
+                            });
+                        });
+                    });
+                </script>
+            </t>
+        </template>
+
     </data>
 </odoo>

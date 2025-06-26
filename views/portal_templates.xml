@@ -378,6 +378,157 @@
                 </script>
             </t>
         </template>
-        
+
+        <!-- My Events -->
+        <template id="portal_my_events" name="My Events">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">My Event Registrations</t>
+                </t>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <t t-if="not registrations">
+                                <div class="alert alert-info">
+                                    <p>You haven't registered for any events yet.</p>
+                                    <a href="/coworking/events" class="btn btn-primary">Browse Events</a>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="row">
+                                    <t t-foreach="registrations" t-as="registration">
+                                        <div class="col-lg-6 mb-4">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title" t-field="registration.event_id.name"/>
+                                                    <p class="card-text">
+                                                        <strong>Date:</strong> <span t-field="registration.event_id.date_begin" t-options="{'widget': 'datetime'}"/><br/>
+                                                        <strong>Status:</strong> <span t-field="registration.state"/><br/>
+                                                        <strong>Price:</strong> €<span t-field="registration.price"/>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- My Membership -->
+        <template id="portal_my_membership" name="My Membership">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">My Membership</t>
+                </t>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <t t-if="active_membership">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h4>Current Membership</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 t-field="active_membership.plan_id.name"/>
+                                        <p><strong>Status:</strong> <span t-field="active_membership.state"/></p>
+                                        <p><strong>Start Date:</strong> <span t-field="active_membership.start_date"/></p>
+                                        <p><strong>End Date:</strong> <span t-field="active_membership.end_date"/></p>
+                                        <t t-if="active_membership.plan_id.coworking_access == 'credit'">
+                                            <p><strong>Credit Balance:</strong> <span t-field="active_membership.credit_balance"/> hours</p>
+                                        </t>
+                                    </div>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="alert alert-info">
+                                    <p>You don't have an active membership.</p>
+                                    <a href="/coworking/membership" class="btn btn-primary">View Plans</a>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Usage Statistics</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Total Bookings:</strong> <span t-esc="current_month_usage.get('total_bookings', 0)"/></p>
+                                    <p><strong>Hours Used:</strong> <span t-esc="current_month_usage.get('total_hours', 0)"/></p>
+                                    <p><strong>Amount:</strong> €<span t-esc="current_month_usage.get('total_amount', 0)"/></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Add Usage -->
+        <template id="portal_add_usage" name="Add Usage">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Add Manual Usage</t>
+                </t>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <t t-if="error">
+                                <div class="alert alert-danger">
+                                    <p t-esc="error"/>
+                                </div>
+                            </t>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>Add Manual Usage Entry</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form method="post">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Usage Type</label>
+                                            <select name="usage_type" class="form-control" required="required">
+                                                <option value="coworking">Coworking</option>
+                                                <option value="meeting_room">Meeting Room</option>
+                                                <option value="event">Event</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Hours</label>
+                                            <input type="number" name="hours" class="form-control" step="0.5" min="0.5" required="required"/>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Description</label>
+                                            <textarea name="description" class="form-control" rows="3"></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">Add Usage</button>
+                                        <a href="/my/membership" class="btn btn-secondary">Cancel</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
     </data>
 </odoo>
