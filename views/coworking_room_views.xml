@@ -37,7 +37,7 @@
                                 <field name="utilization_rate" widget="statinfo" string="Utilization %" suffix="%"/>
                             </button>
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
                         <field name="image" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -73,7 +73,7 @@
                                         <field name="available_days"/>
                                     </group>
                                 </group>
-                                <group string="Custom Schedule" attrs="{'invisible': [('available_days', '!=', 'custom')]}">
+                                <group string="Custom Schedule" invisible="available_days != 'custom'">
                                     <group>
                                         <field name="monday"/>
                                         <field name="tuesday"/>

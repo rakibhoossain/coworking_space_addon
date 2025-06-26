@@ -47,7 +47,7 @@
                             </group>
                             <group>
                                 <field name="invoiced"/>
-                                <field name="invoice_line_id" attrs="{'invisible': [('invoiced', '=', False)]}"/>
+                                <field name="invoice_line_id" invisible="not invoiced"/>
                             </group>
                         </group>
                         <group>
@@ -152,7 +152,7 @@
             <field name="arch" type="xml">
                 <form string="Invoice Generator">
                     <header>
-                        <button name="action_generate_invoices" string="Generate Invoices" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_generate_invoices" string="Generate Invoices" type="object" class="oe_highlight" invisible="state != 'draft'"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,generated,validated"/>
                     </header>
                     <sheet>

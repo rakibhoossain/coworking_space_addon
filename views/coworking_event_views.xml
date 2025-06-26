@@ -26,10 +26,10 @@
             <field name="arch" type="xml">
                 <form string="Event">
                     <header>
-                        <button name="action_publish" string="Publish" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-                        <button name="action_start" string="Start Event" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'published')]}"/>
-                        <button name="action_complete" string="Complete" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'ongoing')]}"/>
-                        <button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state', 'in', ['completed', 'cancelled'])]}"/>
+                        <button name="action_publish" string="Publish" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_start" string="Start Event" type="object" class="oe_highlight" invisible="state != 'published'"/>
+                        <button name="action_complete" string="Complete" type="object" class="oe_highlight" invisible="state != 'ongoing'"/>
+                        <button name="action_cancel" string="Cancel" type="object" invisible="state in ['completed', 'cancelled']"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,published,ongoing,completed"/>
                     </header>
                     <sheet>
@@ -37,7 +37,7 @@
                             <button name="action_view_registrations" type="object" class="oe_stat_button" icon="fa-users">
                                 <field name="attendee_count" widget="statinfo" string="Attendees"/>
                             </button>
-                            <button name="action_view_website" type="object" class="oe_stat_button" icon="fa-globe" attrs="{'invisible': [('website_published', '=', False)]}">
+                            <button name="action_view_website" type="object" class="oe_stat_button" icon="fa-globe" invisible="not website_published">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_text">Website</span>
                                 </div>
@@ -63,7 +63,7 @@
                         <group>
                             <group string="Location">
                                 <field name="room_id"/>
-                                <field name="location" attrs="{'invisible': [('room_id', '!=', False)]}"/>
+                                <field name="location" invisible="room_id"/>
                             </group>
                             <group string="Registration">
                                 <field name="seats_max"/>
@@ -76,7 +76,7 @@
                         <group string="Pricing">
                             <group>
                                 <field name="is_free_for_members"/>
-                                <field name="member_price" attrs="{'invisible': [('is_free_for_members', '=', True)]}"/>
+                                <field name="member_price" invisible="is_free_for_members"/>
                             </group>
                             <group>
                                 <field name="non_member_price"/>
@@ -85,7 +85,7 @@
                         <group string="Website">
                             <group>
                                 <field name="website_published"/>
-                                <field name="website_url" widget="url" attrs="{'invisible': [('website_published', '=', False)]}"/>
+                                <field name="website_url" widget="url" invisible="not website_published"/>
                             </group>
                         </group>
                         <notebook>
@@ -188,9 +188,9 @@
             <field name="arch" type="xml">
                 <form string="Event Registration">
                     <header>
-                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-                        <button name="action_attend" string="Mark as Attended" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'confirmed')]}"/>
-                        <button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state', 'in', ['cancelled', 'attended'])]}"/>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_attend" string="Mark as Attended" type="object" class="oe_highlight" invisible="state != 'confirmed'"/>
+                        <button name="action_cancel" string="Cancel" type="object" invisible="state in ['cancelled', 'attended']"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,attended"/>
                     </header>
                     <sheet>
