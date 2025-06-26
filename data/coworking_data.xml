@@ -144,8 +144,8 @@
         </record>
         
         <record id="email_template_event_registration_confirmation" model="mail.template">
-            <field name="name">Event Registration Confirmation</field>
-            <field name="model_id" ref="model_coworking_event_registration"/>
+            <field name="name">Coworking Event Registration Confirmation</field>
+            <field name="model_id" ref="event.model_event_registration"/>
             <field name="subject">Event Registration Confirmed - ${object.event_id.name}</field>
             <field name="email_from">${(object.event_id.organizer_id.email or user.email)|safe}</field>
             <field name="email_to">${object.partner_id.email}</field>

@@ -63,11 +63,11 @@ Subscription Plans:
         'security/coworking_security.xml',
 
         # Core Views (using basic Odoo modules only)
-        'views/event_event_views.xml',
+        'views/event_event_views.xml',  # Extends Odoo's built-in event.event
         'views/coworking_membership_views.xml',
         'views/coworking_room_views.xml',
         'views/coworking_booking_views.xml',
-        'views/coworking_event_views.xml',
+        # 'views/coworking_event_views.xml',  # REMOVED: Using Odoo's event.event instead
         'views/coworking_usage_views.xml',
         'views/coworking_menus.xml',
 

@@ -13,7 +13,7 @@ class ResPartner(models.Model):
     
     # Booking and usage
     booking_ids = fields.One2many('coworking.booking', 'partner_id', string='Room Bookings')
-    event_registration_ids = fields.One2many('coworking.event.registration', 'partner_id', string='Event Registrations')
+    event_registration_ids = fields.One2many('event.registration', 'partner_id', string='Event Registrations')
     
     # Statistics
     total_bookings = fields.Integer(string='Total Bookings', compute='_compute_coworking_stats')
@@ -35,7 +35,9 @@ class ResPartner(models.Model):
     def _compute_coworking_stats(self):
         for partner in self:
             partner.total_bookings = len(partner.booking_ids.filtered(lambda b: b.state == 'completed'))
-            partner.total_events_attended = len(partner.event_registration_ids.filtered(lambda r: r.state == 'attended'))
+            # Filter for coworking events only and use Odoo's event registration states
+            coworking_registrations = partner.event_registration_ids.filtered(lambda r: r.event_id.is_coworking_event)
+            partner.total_events_attended = len(coworking_registrations.filtered(lambda r: r.state == 'done'))
     
     @api.depends('membership_ids.start_date')
     def _compute_member_since(self):
@@ -76,9 +78,9 @@ class ResPartner(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': _('Event Registrations'),
-            'res_model': 'coworking.event.registration',
+            'res_model': 'event.registration',
             'view_mode': 'tree,form',
-            'domain': [('partner_id', '=', self.id)],
+            'domain': [('partner_id', '=', self.id), ('event_id.is_coworking_event', '=', True)],
             'context': {
                 'default_partner_id': self.id,
             }

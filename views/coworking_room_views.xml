@@ -139,7 +139,7 @@
                     <field name="total_bookings"/>
                     <field name="utilization_rate"/>
                     <templates>
-                        <t t-name="kanban-box">
+                        <t t-name="card">
                             <div class="oe_kanban_card oe_kanban_global_click">
                                 <div class="o_kanban_image">
                                     <img t-att-src="kanban_image('coworking.room', 'image', record.id.raw_value)" alt="Room"/>

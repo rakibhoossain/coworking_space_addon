@@ -61,27 +61,7 @@
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>
         
-        <!-- Event Registration Rules (Custom Model) -->
-        <record id="coworking_event_registration_rule_user" model="ir.rule">
-            <field name="name">Event Registration: User Access</field>
-            <field name="model_id" ref="model_coworking_event_registration"/>
-            <field name="domain_force">['|', ('partner_id.user_ids', 'in', user.id), ('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('group_coworking_user'))]"/>
-        </record>
-
-        <record id="coworking_event_registration_rule_manager" model="ir.rule">
-            <field name="name">Event Registration: Manager Access</field>
-            <field name="model_id" ref="model_coworking_event_registration"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[(4, ref('group_coworking_manager'))]"/>
-        </record>
-
-        <record id="coworking_event_registration_rule_portal" model="ir.rule">
-            <field name="name">Event Registration: Portal Access</field>
-            <field name="model_id" ref="model_coworking_event_registration"/>
-            <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
-        </record>
+        <!-- Custom event models removed - using Odoo's built-in event.event and event.registration instead -->
         
         <!-- Usage Rules (Custom Model) -->
         <record id="coworking_usage_rule_user" model="ir.rule">

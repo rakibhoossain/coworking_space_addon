@@ -39,34 +39,32 @@
             <field name="state">active</field>
         </record>
         
-        <!-- Demo Events -->
-        <record id="event_demo_networking" model="coworking.event">
+        <!-- Demo Events (Using Odoo's Built-in Event System) -->
+        <record id="coworking_event_demo_networking" model="event.event">
             <field name="name">Monthly Networking Event</field>
             <field name="description">Join us for our monthly networking event where entrepreneurs and freelancers connect and share ideas.</field>
             <field name="date_begin" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d 18:00:00')"/>
             <field name="date_end" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d 20:00:00')"/>
-            <field name="room_id" ref="room_conference_a"/>
+            <field name="address_id" ref="base.main_company"/>
             <field name="seats_max">20</field>
-            <field name="event_type">networking</field>
-            <field name="is_free_for_members" eval="True"/>
+            <field name="is_coworking_event" eval="True"/>
+            <field name="member_access">free</field>
             <field name="member_price">0.0</field>
             <field name="non_member_price">15.0</field>
-            <field name="state">published</field>
             <field name="organizer_id" ref="base.main_company"/>
         </record>
-        
-        <record id="event_demo_workshop" model="coworking.event">
+
+        <record id="coworking_event_demo_workshop" model="event.event">
             <field name="name">Digital Marketing Workshop</field>
             <field name="description">Learn the latest digital marketing strategies and tools in this hands-on workshop.</field>
             <field name="date_begin" eval="(DateTime.now() + timedelta(days=14)).strftime('%Y-%m-%d 14:00:00')"/>
             <field name="date_end" eval="(DateTime.now() + timedelta(days=14)).strftime('%Y-%m-%d 17:00:00')"/>
-            <field name="room_id" ref="room_conference_a"/>
+            <field name="address_id" ref="base.main_company"/>
             <field name="seats_max">12</field>
-            <field name="event_type">workshop</field>
-            <field name="is_free_for_members" eval="False"/>
+            <field name="is_coworking_event" eval="True"/>
+            <field name="member_access">discounted</field>
             <field name="member_price">25.0</field>
             <field name="non_member_price">50.0</field>
-            <field name="state">published</field>
             <field name="organizer_id" ref="base.main_company"/>
         </record>
         
@@ -93,19 +91,17 @@
             <field name="state">confirmed</field>
         </record>
         
-        <!-- Demo Event Registrations -->
-        <record id="registration_demo_1" model="coworking.event.registration">
-            <field name="event_id" ref="event_demo_networking"/>
+        <!-- Demo Event Registrations (Using Odoo's Built-in Event Registration) -->
+        <record id="coworking_registration_demo_1" model="event.registration">
+            <field name="event_id" ref="coworking_event_demo_networking"/>
             <field name="partner_id" ref="partner_demo_member_1"/>
-            <field name="membership_id" ref="membership_demo_unlimited"/>
-            <field name="state">confirmed</field>
+            <field name="state">open</field>
         </record>
-        
-        <record id="registration_demo_2" model="coworking.event.registration">
-            <field name="event_id" ref="event_demo_workshop"/>
+
+        <record id="coworking_registration_demo_2" model="event.registration">
+            <field name="event_id" ref="coworking_event_demo_workshop"/>
             <field name="partner_id" ref="partner_demo_member_2"/>
-            <field name="membership_id" ref="membership_demo_partial"/>
-            <field name="state">confirmed</field>
+            <field name="state">open</field>
         </record>
         
         <!-- Demo Usage Records -->
