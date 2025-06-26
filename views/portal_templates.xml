@@ -2,7 +2,9 @@
 <odoo>
     <data>
         
-        <!-- Portal Layout Extension -->
+        <!-- Portal Layout Extension - Commented out for Odoo 18 compatibility -->
+        <!-- The portal structure has changed in Odoo 18, this needs to be updated -->
+        <!--
         <template id="portal_layout" inherit_id="portal.portal_layout">
             <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
                 <li t-if="page_name == 'coworking_home' or page_name == 'booking' or page_name == 'event' or page_name == 'membership' or page_name == 'usage'">
@@ -19,8 +21,11 @@
                 </li>
             </xpath>
         </template>
+        -->
         
-        <!-- Portal My Home Extension -->
+        <!-- Portal My Home Extension - Commented out for Odoo 18 compatibility -->
+        <!-- The portal structure has changed in Odoo 18, this needs to be updated -->
+        <!--
         <template id="portal_my_home_coworking" inherit_id="portal.portal_my_home" customize_show="True" name="Show Coworking">
             <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
                 <t t-call="portal.portal_docs_entry">
@@ -30,6 +35,7 @@
                 </t>
             </xpath>
         </template>
+        -->
         
         <!-- Coworking Portal Home -->
         <template id="portal_coworking_home" name="Coworking Portal Home">

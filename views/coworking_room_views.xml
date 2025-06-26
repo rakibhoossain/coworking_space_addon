@@ -3,11 +3,11 @@
     <data>
         
         <!-- Room Views -->
-        <record id="view_coworking_room_tree" model="ir.ui.view">
-            <field name="name">coworking.room.tree</field>
+        <record id="view_coworking_room_list" model="ir.ui.view">
+            <field name="name">coworking.room.list</field>
             <field name="model">coworking.room</field>
             <field name="arch" type="xml">
-                <tree string="Rooms">
+                <list string="Rooms">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="code"/>
@@ -16,7 +16,7 @@
                     <field name="total_bookings"/>
                     <field name="utilization_rate"/>
                     <field name="active"/>
-                </tree>
+                </list>
             </field>
         </record>
         
@@ -102,23 +102,23 @@
                             </page>
                             <page string="Images">
                                 <field name="image_ids">
-                                    <tree editable="bottom">
+                                    <list editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="name"/>
                                         <field name="image" widget="image"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                             <page string="Bookings">
                                 <field name="booking_ids">
-                                    <tree>
+                                    <list>
                                         <field name="name"/>
                                         <field name="partner_id"/>
                                         <field name="start_datetime"/>
                                         <field name="duration"/>
                                         <field name="state"/>
                                         <field name="total_amount"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>
@@ -165,15 +165,15 @@
         </record>
         
         <!-- Equipment Views -->
-        <record id="view_coworking_equipment_tree" model="ir.ui.view">
-            <field name="name">coworking.equipment.tree</field>
+        <record id="view_coworking_equipment_list" model="ir.ui.view">
+            <field name="name">coworking.equipment.list</field>
             <field name="model">coworking.equipment</field>
             <field name="arch" type="xml">
-                <tree string="Equipment" editable="bottom">
+                <list string="Equipment" editable="bottom">
                     <field name="name"/>
                     <field name="description"/>
                     <field name="icon"/>
-                </tree>
+                </list>
             </field>
         </record>
         
@@ -194,15 +194,15 @@
         </record>
         
         <!-- Amenity Views -->
-        <record id="view_coworking_amenity_tree" model="ir.ui.view">
-            <field name="name">coworking.amenity.tree</field>
+        <record id="view_coworking_amenity_list" model="ir.ui.view">
+            <field name="name">coworking.amenity.list</field>
             <field name="model">coworking.amenity</field>
             <field name="arch" type="xml">
-                <tree string="Amenities" editable="bottom">
+                <list string="Amenities" editable="bottom">
                     <field name="name"/>
                     <field name="description"/>
                     <field name="icon"/>
-                </tree>
+                </list>
             </field>
         </record>
         

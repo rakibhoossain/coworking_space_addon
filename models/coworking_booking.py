@@ -269,3 +269,31 @@ class CoworkingBooking(models.Model):
         ])
         past_bookings.action_complete()
         _logger.info(f'Auto-completed {len(past_bookings)} past bookings')
+
+    def action_view_sale_order(self):
+        """Open the related sale order"""
+        self.ensure_one()
+        if not self.sale_order_id:
+            return {}
+        return {
+            'name': _('Sale Order'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'res_id': self.sale_order_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def action_view_crm_lead(self):
+        """Open the related CRM lead/opportunity"""
+        self.ensure_one()
+        if not self.crm_lead_id:
+            return {}
+        return {
+            'name': _('Opportunity'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'crm.lead',
+            'res_id': self.crm_lead_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }

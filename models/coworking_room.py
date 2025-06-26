@@ -146,6 +146,48 @@ class CoworkingRoom(models.Model):
         
         return slots
 
+    def action_view_bookings(self):
+        """Open the list of bookings for this room"""
+        self.ensure_one()
+        return {
+            'name': _('Room Bookings'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'coworking.booking',
+            'view_mode': 'list,form',
+            'domain': [('room_id', '=', self.id)],
+            'context': {'default_room_id': self.id},
+        }
+
+    def action_view_revenue(self):
+        """Open revenue analysis for this room"""
+        self.ensure_one()
+        return {
+            'name': _('Room Revenue'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'coworking.booking',
+            'view_mode': 'graph,pivot,list',
+            'domain': [('room_id', '=', self.id), ('state', '=', 'completed')],
+            'context': {
+                'group_by': ['start_datetime:month'],
+                'search_default_completed': 1,
+            },
+        }
+
+    def action_view_utilization(self):
+        """Open utilization analysis for this room"""
+        self.ensure_one()
+        return {
+            'name': _('Room Utilization'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'coworking.booking',
+            'view_mode': 'calendar,graph,list',
+            'domain': [('room_id', '=', self.id)],
+            'context': {
+                'default_room_id': self.id,
+                'search_default_this_month': 1,
+            },
+        }
+
 
 class CoworkingEquipment(models.Model):
     _name = 'coworking.equipment'

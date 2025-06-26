@@ -3,11 +3,11 @@
     <data>
         
         <!-- Booking Views -->
-        <record id="view_coworking_booking_tree" model="ir.ui.view">
-            <field name="name">coworking.booking.tree</field>
+        <record id="view_coworking_booking_list" model="ir.ui.view">
+            <field name="name">coworking.booking.list</field>
             <field name="model">coworking.booking</field>
             <field name="arch" type="xml">
-                <tree string="Bookings" decoration-success="state=='confirmed'" decoration-info="state=='in_progress'" decoration-muted="state in ['cancelled','no_show']">
+                <list string="Bookings" decoration-success="state=='confirmed'" decoration-info="state=='in_progress'" decoration-muted="state in ['cancelled','no_show']">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="room_id"/>
@@ -17,7 +17,7 @@
                     <field name="state"/>
                     <field name="total_amount"/>
                     <field name="payment_status"/>
-                </tree>
+                </list>
             </field>
         </record>
         
@@ -89,13 +89,13 @@
                                     <field name="crm_lead_id"/>
                                 </group>
                                 <field name="invoice_line_ids">
-                                    <tree>
+                                    <list>
                                         <field name="move_id"/>
                                         <field name="name"/>
                                         <field name="quantity"/>
                                         <field name="price_unit"/>
                                         <field name="price_total"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>

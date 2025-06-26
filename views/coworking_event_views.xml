@@ -3,11 +3,11 @@
     <data>
         
         <!-- Event Views -->
-        <record id="view_coworking_event_tree" model="ir.ui.view">
-            <field name="name">coworking.event.tree</field>
+        <record id="view_coworking_event_list" model="ir.ui.view">
+            <field name="name">coworking.event.list</field>
             <field name="model">coworking.event</field>
             <field name="arch" type="xml">
-                <tree string="Events" decoration-success="state=='published'" decoration-info="state=='ongoing'" decoration-muted="state in ['cancelled','completed']">
+                <list string="Events" decoration-success="state=='published'" decoration-info="state=='ongoing'" decoration-muted="state in ['cancelled','completed']">
                     <field name="name"/>
                     <field name="date_begin"/>
                     <field name="duration"/>
@@ -16,7 +16,7 @@
                     <field name="attendee_count"/>
                     <field name="state"/>
                     <field name="website_published"/>
-                </tree>
+                </list>
             </field>
         </record>
         
@@ -94,7 +94,7 @@
                             </page>
                             <page string="Registrations">
                                 <field name="registration_ids">
-                                    <tree>
+                                    <list>
                                         <field name="partner_name"/>
                                         <field name="partner_email"/>
                                         <field name="registration_date"/>
@@ -102,7 +102,7 @@
                                         <field name="price"/>
                                         <field name="state"/>
                                         <field name="payment_status"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>
@@ -165,11 +165,11 @@
         </record>
         
         <!-- Event Registration Views -->
-        <record id="view_coworking_event_registration_tree" model="ir.ui.view">
-            <field name="name">coworking.event.registration.tree</field>
+        <record id="view_coworking_event_registration_list" model="ir.ui.view">
+            <field name="name">coworking.event.registration.list</field>
             <field name="model">coworking.event.registration</field>
             <field name="arch" type="xml">
-                <tree string="Event Registrations" decoration-success="state=='confirmed'" decoration-info="state=='attended'" decoration-muted="state=='cancelled'">
+                <list string="Event Registrations" decoration-success="state=='confirmed'" decoration-info="state=='attended'" decoration-muted="state=='cancelled'">
                     <field name="event_id"/>
                     <field name="partner_name"/>
                     <field name="partner_email"/>
@@ -178,7 +178,7 @@
                     <field name="price"/>
                     <field name="state"/>
                     <field name="payment_status"/>
-                </tree>
+                </list>
             </field>
         </record>
         

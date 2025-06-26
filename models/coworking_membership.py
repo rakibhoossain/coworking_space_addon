@@ -64,6 +64,18 @@ class CoworkingMembershipPlan(models.Model):
             if self.search_count([('code', '=', plan.code), ('id', '!=', plan.id)]) > 0:
                 raise ValidationError(_('Plan code must be unique.'))
 
+    def action_view_memberships(self):
+        """Open the list of memberships for this plan"""
+        self.ensure_one()
+        return {
+            'name': _('Memberships'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'coworking.membership',
+            'view_mode': 'list,form',
+            'domain': [('plan_id', '=', self.id)],
+            'context': {'default_plan_id': self.id},
+        }
+
 
 class CoworkingMembership(models.Model):
     _name = 'coworking.membership'
@@ -93,7 +105,7 @@ class CoworkingMembership(models.Model):
     initial_credit = fields.Float(string='Initial Credit', default=0.0)
     
     # Billing
-    subscription_id = fields.Many2one('sale.subscription', string='Subscription')
+    # subscription_id = fields.Many2one('sale.subscription', string='Subscription')  # Requires sale_subscription module
     auto_renew = fields.Boolean(string='Auto Renew', default=True)
     
     # Usage tracking
@@ -164,6 +176,30 @@ class CoworkingMembership(models.Model):
             else:
                 raise ValidationError(_('Insufficient credit balance. Available: %.2f hours, Required: %.2f hours') % (self.credit_balance, hours))
         return True
+
+    def action_view_bookings(self):
+        """Open the list of bookings for this membership"""
+        self.ensure_one()
+        return {
+            'name': _('Bookings'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'coworking.booking',
+            'view_mode': 'list,form',
+            'domain': [('membership_id', '=', self.id)],
+            'context': {'default_membership_id': self.id},
+        }
+
+    def action_view_usage(self):
+        """Open the list of usage records for this membership"""
+        self.ensure_one()
+        return {
+            'name': _('Usage Records'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'coworking.usage',
+            'view_mode': 'list,form',
+            'domain': [('membership_id', '=', self.id)],
+            'context': {'default_membership_id': self.id},
+        }
     
     @api.model
     def _cron_check_expired_memberships(self):

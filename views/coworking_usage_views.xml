@@ -3,11 +3,11 @@
     <data>
         
         <!-- Usage Views -->
-        <record id="view_coworking_usage_tree" model="ir.ui.view">
-            <field name="name">coworking.usage.tree</field>
+        <record id="view_coworking_usage_list" model="ir.ui.view">
+            <field name="name">coworking.usage.list</field>
             <field name="model">coworking.usage</field>
             <field name="arch" type="xml">
-                <tree string="Usage Records" decoration-success="invoiced==True" decoration-warning="invoiced==False">
+                <list string="Usage Records" decoration-success="invoiced==True" decoration-warning="invoiced==False">
                     <field name="date"/>
                     <field name="partner_id"/>
                     <field name="membership_id"/>
@@ -16,7 +16,7 @@
                     <field name="amount"/>
                     <field name="invoiced"/>
                     <field name="description"/>
-                </tree>
+                </list>
             </field>
         </record>
         
@@ -132,17 +132,17 @@
         </record>
         
         <!-- Invoice Generator Views -->
-        <record id="view_coworking_invoice_generator_tree" model="ir.ui.view">
-            <field name="name">coworking.invoice.generator.tree</field>
+        <record id="view_coworking_invoice_generator_list" model="ir.ui.view">
+            <field name="name">coworking.invoice.generator.list</field>
             <field name="model">coworking.invoice.generator</field>
             <field name="arch" type="xml">
-                <tree string="Invoice Generators">
+                <list string="Invoice Generators">
                     <field name="name"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="invoice_count"/>
                     <field name="state"/>
-                </tree>
+                </list>
             </field>
         </record>
         
@@ -174,13 +174,13 @@
                         <notebook>
                             <page string="Generated Invoices">
                                 <field name="invoice_ids">
-                                    <tree>
+                                    <list>
                                         <field name="name"/>
                                         <field name="partner_id"/>
                                         <field name="invoice_date"/>
                                         <field name="amount_total"/>
                                         <field name="state"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>

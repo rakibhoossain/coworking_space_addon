@@ -293,6 +293,18 @@ class CoworkingInvoiceGenerator(models.Model):
         
         return product
 
+    def action_view_invoices(self):
+        """Open the list of generated invoices"""
+        self.ensure_one()
+        return {
+            'name': _('Generated Invoices'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'view_mode': 'list,form',
+            'domain': [('invoice_generator_id', '=', self.id)],
+            'context': {'default_invoice_generator_id': self.id},
+        }
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'

@@ -3,11 +3,11 @@
     <data>
         
         <!-- Membership Plan Views -->
-        <record id="view_coworking_membership_plan_tree" model="ir.ui.view">
-            <field name="name">coworking.membership.plan.tree</field>
+        <record id="view_coworking_membership_plan_list" model="ir.ui.view">
+            <field name="name">coworking.membership.plan.list</field>
             <field name="model">coworking.membership.plan</field>
             <field name="arch" type="xml">
-                <tree string="Membership Plans">
+                <list string="Membership Plans">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="code"/>
@@ -17,7 +17,7 @@
                     <field name="event_access"/>
                     <field name="member_count"/>
                     <field name="active"/>
-                </tree>
+                </list>
             </field>
         </record>
         
@@ -66,13 +66,13 @@
                             </page>
                             <page string="Members">
                                 <field name="membership_ids" readonly="1">
-                                    <tree>
+                                    <list>
                                         <field name="name"/>
                                         <field name="partner_id"/>
                                         <field name="start_date"/>
                                         <field name="state"/>
                                         <field name="credit_balance" column_invisible="parent.coworking_access != 'credit'"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>
@@ -82,11 +82,11 @@
         </record>
         
         <!-- Membership Views -->
-        <record id="view_coworking_membership_tree" model="ir.ui.view">
-            <field name="name">coworking.membership.tree</field>
+        <record id="view_coworking_membership_list" model="ir.ui.view">
+            <field name="name">coworking.membership.list</field>
             <field name="model">coworking.membership</field>
             <field name="arch" type="xml">
-                <tree string="Memberships" decoration-success="state=='active'" decoration-muted="state in ['expired','cancelled']">
+                <list string="Memberships" decoration-success="state=='active'" decoration-muted="state in ['expired','cancelled']">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="plan_id"/>
@@ -96,7 +96,7 @@
                     <field name="credit_balance" column_invisible="plan_id.coworking_access != 'credit'"/>
                     <field name="total_bookings"/>
                     <field name="total_hours_used"/>
-                </tree>
+                </list>
             </field>
         </record>
         
@@ -145,33 +145,33 @@
                         <notebook>
                             <page string="Bookings">
                                 <field name="booking_ids">
-                                    <tree>
+                                    <list>
                                         <field name="name"/>
                                         <field name="room_id"/>
                                         <field name="start_datetime"/>
                                         <field name="duration"/>
                                         <field name="state"/>
                                         <field name="total_amount"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                             <page string="Usage Records">
                                 <field name="usage_ids">
-                                    <tree>
+                                    <list>
                                         <field name="date"/>
                                         <field name="usage_type"/>
                                         <field name="hours"/>
                                         <field name="amount"/>
                                         <field name="description"/>
                                         <field name="invoiced"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
-                            <page string="Subscription">
+                            <!-- <page string="Subscription">
                                 <group>
                                     <field name="subscription_id"/>
                                 </group>
-                            </page>
+                            </page> -->
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">

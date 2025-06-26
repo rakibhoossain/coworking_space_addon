@@ -155,6 +155,29 @@ class CoworkingEvent(models.Model):
         
         return self.non_member_price
 
+    def action_view_registrations(self):
+        """Open the list of registrations for this event"""
+        self.ensure_one()
+        return {
+            'name': _('Event Registrations'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'coworking.event.registration',
+            'view_mode': 'list,form',
+            'domain': [('event_id', '=', self.id)],
+            'context': {'default_event_id': self.id},
+        }
+
+    def action_view_website(self):
+        """Open the event on website"""
+        self.ensure_one()
+        if not self.website_published:
+            return {}
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/event/{self.id}',
+            'target': 'new',
+        }
+
 
 class CoworkingEventRegistration(models.Model):
     _name = 'coworking.event.registration'
