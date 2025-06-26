@@ -17,21 +17,21 @@
         
         <!-- Record Rules -->
         
-        <!-- Membership Rules -->
+        <!-- Membership Rules (Custom Model) -->
         <record id="coworking_membership_rule_user" model="ir.rule">
             <field name="name">Coworking Membership: User Access</field>
             <field name="model_id" ref="model_coworking_membership"/>
             <field name="domain_force">['|', ('partner_id.user_ids', 'in', user.id), ('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('group_coworking_user'))]"/>
         </record>
-        
+
         <record id="coworking_membership_rule_manager" model="ir.rule">
             <field name="name">Coworking Membership: Manager Access</field>
             <field name="model_id" ref="model_coworking_membership"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('group_coworking_manager'))]"/>
         </record>
-        
+
         <record id="coworking_membership_rule_portal" model="ir.rule">
             <field name="name">Coworking Membership: Portal Access</field>
             <field name="model_id" ref="model_coworking_membership"/>
@@ -39,21 +39,21 @@
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>
         
-        <!-- Booking Rules -->
+        <!-- Booking Rules (Custom Model) -->
         <record id="coworking_booking_rule_user" model="ir.rule">
             <field name="name">Coworking Booking: User Access</field>
             <field name="model_id" ref="model_coworking_booking"/>
             <field name="domain_force">['|', ('partner_id.user_ids', 'in', user.id), ('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('group_coworking_user'))]"/>
         </record>
-        
+
         <record id="coworking_booking_rule_manager" model="ir.rule">
             <field name="name">Coworking Booking: Manager Access</field>
             <field name="model_id" ref="model_coworking_booking"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('group_coworking_manager'))]"/>
         </record>
-        
+
         <record id="coworking_booking_rule_portal" model="ir.rule">
             <field name="name">Coworking Booking: Portal Access</field>
             <field name="model_id" ref="model_coworking_booking"/>
@@ -61,21 +61,21 @@
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>
         
-        <!-- Event Registration Rules -->
+        <!-- Event Registration Rules (Custom Model) -->
         <record id="coworking_event_registration_rule_user" model="ir.rule">
             <field name="name">Event Registration: User Access</field>
             <field name="model_id" ref="model_coworking_event_registration"/>
             <field name="domain_force">['|', ('partner_id.user_ids', 'in', user.id), ('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('group_coworking_user'))]"/>
         </record>
-        
+
         <record id="coworking_event_registration_rule_manager" model="ir.rule">
             <field name="name">Event Registration: Manager Access</field>
             <field name="model_id" ref="model_coworking_event_registration"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('group_coworking_manager'))]"/>
         </record>
-        
+
         <record id="coworking_event_registration_rule_portal" model="ir.rule">
             <field name="name">Event Registration: Portal Access</field>
             <field name="model_id" ref="model_coworking_event_registration"/>
@@ -83,21 +83,21 @@
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>
         
-        <!-- Usage Rules -->
+        <!-- Usage Rules (Custom Model) -->
         <record id="coworking_usage_rule_user" model="ir.rule">
             <field name="name">Coworking Usage: User Access</field>
             <field name="model_id" ref="model_coworking_usage"/>
             <field name="domain_force">['|', ('partner_id.user_ids', 'in', user.id), ('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('group_coworking_user'))]"/>
         </record>
-        
+
         <record id="coworking_usage_rule_manager" model="ir.rule">
             <field name="name">Coworking Usage: Manager Access</field>
             <field name="model_id" ref="model_coworking_usage"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('group_coworking_manager'))]"/>
         </record>
-        
+
         <record id="coworking_usage_rule_portal" model="ir.rule">
             <field name="name">Coworking Usage: Portal Access</field>
             <field name="model_id" ref="model_coworking_usage"/>

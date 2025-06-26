@@ -2,28 +2,31 @@
 
 ## Overview
 
-This Odoo addon provides a comprehensive solution for managing coworking spaces, including membership management, room booking, event registration, and automated billing. The system is designed to handle different subscription plans and provide both member and non-member access to services.
+This Odoo addon provides a comprehensive solution for managing coworking spaces by **extending existing Odoo modules** rather than creating custom implementations. The system leverages Odoo's built-in Event Management, Rental System, Subscription Management, and CRM modules to provide a robust coworking space solution with membership management, room booking, event registration, and automated billing.
 
 ## Features
 
-### 🏢 Membership Management
+### 🏢 Membership Management (Using Odoo Subscription Module)
+- **Leverages `sale_subscription`**: Extends Odoo's subscription system for memberships
 - **Multiple Subscription Plans**: Unlimited (€20/month), Partial (€5/month), Pay-As-You-Go (€10 for 10 hours)
-- **Automated Membership Lifecycle**: Draft → Active → Suspended/Expired/Cancelled
-- **Credit-based System**: For Pay-As-You-Go plans with automatic credit consumption
-- **Member Portal**: Self-service portal for members to manage their account
+- **Automated Membership Lifecycle**: Built on Odoo's subscription lifecycle
+- **Credit-based System**: Custom extension for Pay-As-You-Go plans
+- **Member Portal**: Extends Odoo's portal system
 
-### 🏠 Meeting Room Booking
-- **Real-time Availability**: Check room availability with conflict detection
+### 🏠 Meeting Room Booking (Using Odoo Rental Module)
+- **Leverages `sale_renting`**: Extends Odoo's rental system for room bookings
+- **Real-time Availability**: Built on Odoo's rental availability engine
 - **Multi-user Access**: Both members and non-members can book rooms
 - **Automated Pricing**: Different rates based on membership type
-- **CRM Integration**: Automatic opportunity creation for non-member bookings
-- **Calendar Integration**: Visual booking calendar with drag-and-drop functionality
+- **CRM Integration**: Automatic opportunity creation for non-member bookings using Odoo CRM
+- **Calendar Integration**: Uses Odoo's calendar system
 
-### 🎉 Event Management
-- **Event Registration**: Online registration with payment integration
-- **Member Benefits**: Free or discounted access based on membership plan
-- **Capacity Management**: Automatic seat availability tracking
-- **Email Notifications**: Automated confirmation emails
+### 🎉 Event Management (Using Odoo Event Module)
+- **Leverages `event` + `website_event`**: Extends Odoo's event management system
+- **Event Registration**: Built on Odoo's event registration system
+- **Member Benefits**: Custom pricing logic for members vs non-members
+- **Capacity Management**: Uses Odoo's seat management
+- **Email Notifications**: Leverages Odoo's email template system
 
 ### 💰 Automated Billing
 - **Monthly Invoice Generation**: Automated billing on the 1st of each month
@@ -37,73 +40,119 @@ This Odoo addon provides a comprehensive solution for managing coworking spaces,
 - **Payment Integration**: Stripe integration for online payments
 - **Responsive Design**: Mobile-friendly interface
 
-## System Architecture
+## System Architecture (Leveraging Existing Odoo Modules)
 
 ```mermaid
 graph TB
     A[Website Frontend] --> B[Controllers]
-    B --> C[Models]
+    B --> C[Extended Models]
     C --> D[Database]
-    
+
     E[Portal] --> B
     F[Backend Views] --> C
-    
+
     C --> G[Automated Billing]
     C --> H[CRM Integration]
     C --> I[Email Notifications]
-    
+
     G --> J[Invoice Generation]
     H --> K[Lead Creation]
     I --> L[Email Templates]
-    
-    subgraph "Core Models"
-        M[Membership]
-        N[Room]
-        O[Booking]
-        P[Event]
-        Q[Usage]
+
+    subgraph "Extended Odoo Models"
+        M[sale.subscription<br/>+ Membership Extensions]
+        N[product.product<br/>+ Room Extensions]
+        O[sale.rental<br/>+ Booking Extensions]
+        P[event.event<br/>+ Coworking Extensions]
+        Q[account.move.line<br/>+ Usage Tracking]
     end
-    
+
+    subgraph "Core Odoo Modules"
+        R[Event Management]
+        S[Rental System]
+        T[Subscription Management]
+        U[CRM]
+        V[Accounting]
+    end
+
     C --> M
     C --> N
     C --> O
     C --> P
     C --> Q
+
+    M --> T
+    O --> S
+    P --> R
+    H --> U
+    G --> V
 ```
 
-## Data Model
+## Module Extension Strategy
 
-### Core Entities
+Instead of creating custom models from scratch, this addon **extends existing Odoo functionality**:
 
-1. **Coworking Membership Plan**
-   - Defines subscription types and access levels
-   - Pricing and credit allocation
-   - Access permissions for different services
+### 1. **Membership Management** → `sale_subscription`
+- Extend `sale.subscription` model for membership plans
+- Add custom fields for coworking-specific features (credit balance, access levels)
+- Leverage existing subscription lifecycle and billing
 
-2. **Coworking Membership**
-   - Links partners to membership plans
-   - Tracks membership lifecycle and credit balance
-   - Manages auto-renewal and billing
+### 2. **Meeting Room Booking** → `sale_renting`
+- Extend `product.product` for meeting rooms
+- Use `sale.rental` for booking management
+- Add coworking-specific pricing logic and member/non-member handling
 
-3. **Coworking Room**
-   - Room details, capacity, and equipment
-   - Availability schedules and pricing
-   - Equipment and amenity associations
+### 3. **Event Management** → `event` + `website_event`
+- Extend `event.event` for coworking events
+- Leverage existing registration system
+- Add member pricing and access control
 
-4. **Coworking Booking**
-   - Room reservations with time slots
-   - Member vs non-member pricing
-   - State management and payment tracking
+### 4. **CRM Integration** → `crm`
+- Use existing `crm.lead` for non-member opportunities
+- Automatic lead creation for non-member bookings
 
-5. **Coworking Event**
-   - Event details and registration management
-   - Capacity and pricing configuration
-   - Member vs non-member access
+### 5. **Billing** → `account`
+- Leverage existing invoice generation
+- Extend with coworking-specific billing logic
 
-6. **Coworking Usage**
-   - Manual usage entry for billing
-   - Tracks coworking space usage hours
-   - Links to automated billing system
+## Data Model (Extended Odoo Models)
+
+### Extended Entities
+
+1. **Membership Plans** → `sale.subscription.template`
+   - **Extends**: Odoo's subscription template system
+   - **Adds**: Coworking access levels, credit allocation, member benefits
+   - **Leverages**: Existing pricing, billing cycles, and lifecycle management
+
+2. **Memberships** → `sale.subscription`
+   - **Extends**: Odoo's subscription system
+   - **Adds**: Credit balance tracking, coworking-specific states
+   - **Leverages**: Auto-renewal, payment processing, invoice generation
+
+3. **Meeting Rooms** → `product.product`
+   - **Extends**: Odoo's product system with rental capabilities
+   - **Adds**: Room-specific fields (capacity, equipment, availability)
+   - **Leverages**: Existing product management, pricing, and inventory
+
+4. **Room Bookings** → `sale.rental`
+   - **Extends**: Odoo's rental system
+   - **Adds**: Member vs non-member logic, coworking-specific workflows
+   - **Leverages**: Availability checking, pricing, and order management
+
+5. **Events** → `event.event`
+   - **Extends**: Odoo's event management system
+   - **Adds**: Member pricing, coworking-specific registration logic
+   - **Leverages**: Registration management, capacity control, email notifications
+
+6. **Event Registrations** → `event.registration`
+   - **Extends**: Odoo's event registration system
+   - **Adds**: Member identification, custom pricing logic
+   - **Leverages**: Payment processing, confirmation emails
+
+7. **Usage Tracking** → `account.analytic.line`
+   - **Extends**: Odoo's analytic accounting for usage tracking
+   - **Adds**: Coworking-specific usage types and billing integration
+   - **Leverages**: Time tracking, cost allocation, reporting
 
 ## Installation Guide
 
@@ -136,18 +185,21 @@ graph TB
    - Set up payment providers (for Stripe integration)
 
 ### Dependencies
-The addon depends on the following Odoo modules:
+The addon **extends** the following existing Odoo modules:
 - `base` - Core Odoo functionality
 - `website` - Website framework
 - `website_sale` - E-commerce functionality
-- `website_event` - Event management
+- `website_event` - **Event management (LEVERAGED for events)**
 - `sale` - Sales management
-- `sale_subscription` - Subscription management
+- `sale_subscription` - **Subscription management (LEVERAGED for memberships)**
+- `sale_renting` - **Rental system (LEVERAGED for meeting room bookings)**
 - `account` - Accounting
-- `crm` - Customer relationship management
-- `event` - Event management
+- `crm` - **Customer relationship management (LEVERAGED for non-member leads)**
+- `event` - **Event management core (LEVERAGED)**
 - `portal` - Customer portal
 - `payment` - Payment processing
+- `resource` - Resource management for rooms
+- `calendar` - Calendar integration
 
 ## Configuration
 

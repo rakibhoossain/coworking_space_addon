@@ -52,7 +52,7 @@
                             <group>
                                 <field name="event_type"/>
                                 <field name="organizer_id"/>
-                                <field name="user_id"/>
+                                <field name="responsible_user_id"/>
                             </group>
                             <group>
                                 <field name="date_begin"/>

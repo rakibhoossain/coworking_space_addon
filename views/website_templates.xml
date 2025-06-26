@@ -334,7 +334,7 @@
                                                 <i class="fa fa-calendar"/> <span t-field="event.date_begin" t-options="{'widget': 'datetime'}"/>
                                             </p>
                                             <p class="text-muted">
-                                                <i class="fa fa-users"/> <span t-esc="event.seats_max"/> seats
+                                                <i class="fa fa-users"/> <span t-out="event.seats_max"/> seats
                                             </p>
                                         </div>
                                         <div class="card-footer">
@@ -365,11 +365,11 @@
                                         <p><strong>Date:</strong> <span t-field="event.date_begin" t-options="{'widget': 'datetime'}"/></p>
                                         <p><strong>Duration:</strong> <span t-field="event.duration"/> hours</p>
                                         <p><strong>Location:</strong> <span t-field="event.location"/></p>
-                                        <p><strong>Capacity:</strong> <span t-esc="event.seats_max"/> people</p>
+                                        <p><strong>Capacity:</strong> <span t-out="event.seats_max"/> people</p>
                                     </div>
                                     <div class="col-md-6">
                                         <h5>Pricing</h5>
-                                        <p><strong>Price:</strong> €<span t-esc="price"/></p>
+                                        <p><strong>Price:</strong> €<span t-out="price"/></p>
                                         <t t-if="membership">
                                             <p class="text-success">✓ Member discount applied</p>
                                         </t>

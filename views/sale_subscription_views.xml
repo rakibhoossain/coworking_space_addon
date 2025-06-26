@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Extend Subscription Template Form View -->
+        <record id="view_subscription_template_form_coworking" model="ir.ui.view">
+            <field name="name">sale.subscription.template.form.coworking</field>
+            <field name="model">sale.subscription.template</field>
+            <field name="inherit_id" ref="sale_subscription.sale_subscription_template_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <group string="Coworking Settings" invisible="not is_coworking_plan">
+                        <group>
+                            <field name="is_coworking_plan"/>
+                            <field name="coworking_access" invisible="not is_coworking_plan"/>
+                            <field name="meeting_room_access" invisible="not is_coworking_plan"/>
+                            <field name="event_access" invisible="not is_coworking_plan"/>
+                        </group>
+                        <group>
+                            <field name="credit_amount" invisible="coworking_access not in ['credit']"/>
+                            <field name="meeting_room_rate" invisible="meeting_room_access not in ['paid']"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Extend Subscription Template List View -->
+        <record id="view_subscription_template_list_coworking" model="ir.ui.view">
+            <field name="name">sale.subscription.template.list.coworking</field>
+            <field name="model">sale.subscription.template</field>
+            <field name="inherit_id" ref="sale_subscription.sale_subscription_template_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="is_coworking_plan"/>
+                    <field name="coworking_access"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Extend Subscription Form View -->
+        <record id="view_subscription_form_coworking" model="ir.ui.view">
+            <field name="name">sale.subscription.form.coworking</field>
+            <field name="model">sale.subscription</field>
+            <field name="inherit_id" ref="sale_subscription.sale_subscription_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_view_bookings" type="object" class="oe_stat_button" icon="fa-calendar" invisible="not is_coworking_membership">
+                        <field name="total_bookings" widget="statinfo" string="Bookings"/>
+                    </button>
+                    <button name="action_view_events" type="object" class="oe_stat_button" icon="fa-ticket" invisible="not is_coworking_membership">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Events</span>
+                        </div>
+                    </button>
+                </xpath>
+                
+                <xpath expr="//sheet" position="inside">
+                    <group string="Coworking Membership" invisible="not is_coworking_membership">
+                        <group>
+                            <field name="is_coworking_membership"/>
+                            <field name="coworking_access"/>
+                            <field name="meeting_room_access"/>
+                            <field name="event_access"/>
+                        </group>
+                        <group>
+                            <field name="credit_balance" invisible="coworking_access not in ['credit']"/>
+                            <field name="total_hours_used"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Extend Subscription List View -->
+        <record id="view_subscription_list_coworking" model="ir.ui.view">
+            <field name="name">sale.subscription.list.coworking</field>
+            <field name="model">sale.subscription</field>
+            <field name="inherit_id" ref="sale_subscription.sale_subscription_view_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="is_coworking_membership"/>
+                    <field name="coworking_access"/>
+                    <field name="credit_balance" invisible="coworking_access not in ['credit']"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Coworking Memberships Action -->
+        <record id="action_coworking_memberships" model="ir.actions.act_window">
+            <field name="name">Coworking Memberships</field>
+            <field name="res_model">sale.subscription</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('is_coworking_membership', '=', True)]</field>
+            <field name="context">{'default_is_coworking_membership': True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first coworking membership!
+                </p>
+                <p>
+                    Manage coworking space memberships with different subscription plans.
+                </p>
+            </field>
+        </record>
+
+        <!-- Coworking Membership Plans Action -->
+        <record id="action_coworking_membership_plans" model="ir.actions.act_window">
+            <field name="name">Membership Plans</field>
+            <field name="res_model">sale.subscription.template</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('is_coworking_plan', '=', True)]</field>
+            <field name="context">{'default_is_coworking_plan': True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first membership plan!
+                </p>
+                <p>
+                    Define different subscription plans for your coworking space.
+                </p>
+            </field>
+        </record>
+
+        <!-- Search Views -->
+        <record id="view_subscription_search_coworking" model="ir.ui.view">
+            <field name="name">sale.subscription.search.coworking</field>
+            <field name="model">sale.subscription</field>
+            <field name="inherit_id" ref="sale_subscription.sale_subscription_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <filter string="Coworking Memberships" name="coworking_memberships" domain="[('is_coworking_membership', '=', True)]"/>
+                    <filter string="Unlimited Access" name="unlimited_access" domain="[('coworking_access', '=', 'unlimited')]"/>
+                    <filter string="Credit-based" name="credit_based" domain="[('coworking_access', '=', 'credit')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Coworking Access" name="group_coworking_access" context="{'group_by': 'coworking_access'}"/>
+                        <filter string="Meeting Room Access" name="group_meeting_room_access" context="{'group_by': 'meeting_room_access'}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Menu Items -->
+        <menuitem id="menu_coworking_memberships"
+                  name="Memberships"
+                  parent="sale_subscription.menu_sale_subscription_root"
+                  action="action_coworking_memberships"
+                  sequence="10"/>
+
+        <menuitem id="menu_coworking_membership_plans"
+                  name="Membership Plans"
+                  parent="sale_subscription.menu_sale_subscription_root"
+                  action="action_coworking_membership_plans"
+                  sequence="20"/>
+
+    </data>
+</odoo>

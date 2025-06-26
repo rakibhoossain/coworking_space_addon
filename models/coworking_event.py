@@ -59,7 +59,7 @@ class CoworkingEvent(models.Model):
     
     # Organizer
     organizer_id = fields.Many2one('res.partner', string='Organizer', default=lambda self: self.env.company.partner_id)
-    user_id = fields.Many2one('res.users', string='Responsible User', default=lambda self: self.env.user)
+    responsible_user_id = fields.Many2one('res.users', string='Event Manager', default=lambda self: self.env.user)
     
     # Registration and Attendees
     registration_ids = fields.One2many('coworking.event.registration', 'event_id', string='Registrations')

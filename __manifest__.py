@@ -37,6 +37,7 @@ Subscription Plans:
     'website': 'https://luminouslabsbd.com',
     'license': 'LGPL-3',
     'depends': [
+        # Core Odoo modules (always available)
         'base',
         'website',
         'sale',
@@ -45,27 +46,34 @@ Subscription Plans:
         'portal',
         'calendar',
         'product',
-        # Optional dependencies - comment out if not available
-        # 'website_sale',
-        # 'website_event',
-        # 'website_payment',
-        # 'sale_subscription',
-        # 'event',
-        # 'payment',
-        # 'stock',
+        'calendar',
+        'resource',
+
+        # Event management (core modules)
+        'event',
+        'website_event',
+
+        # E-commerce (usually available)
+        'website_sale',
+        'payment',
     ],
     'data': [
         # Security - Load first
         'security/ir.model.access.csv',
         'security/coworking_security.xml',
 
-        # Basic Views - Load in order
+        # Core Views (using basic Odoo modules only)
+        'views/event_event_views.xml',
         'views/coworking_membership_views.xml',
         'views/coworking_room_views.xml',
         'views/coworking_booking_views.xml',
         'views/coworking_event_views.xml',
         'views/coworking_usage_views.xml',
         'views/coworking_menus.xml',
+
+        # Extended Views (commented out - require optional modules)
+        # 'views/sale_subscription_views.xml',  # Requires sale_subscription
+        # 'views/sale_rental_views.xml',        # Requires sale_renting
 
         # Data - Load after views
         'data/coworking_data.xml',
