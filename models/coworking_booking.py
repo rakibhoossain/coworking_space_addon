@@ -67,11 +67,12 @@ class CoworkingBooking(models.Model):
     is_past_due = fields.Boolean(string='Past Due', compute='_compute_is_past_due')
     can_cancel = fields.Boolean(string='Can Cancel', compute='_compute_can_cancel')
     
-    @api.model
-    def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('coworking.booking') or _('New')
-        return super(CoworkingBooking, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('coworking.booking') or _('New')
+        return super(CoworkingBooking, self).create(vals_list)
     
     @api.depends('start_datetime', 'end_datetime')
     def _compute_duration(self):

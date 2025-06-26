@@ -116,11 +116,12 @@ class CoworkingMembership(models.Model):
     total_bookings = fields.Integer(string='Total Bookings', compute='_compute_usage_stats')
     total_hours_used = fields.Float(string='Total Hours Used', compute='_compute_usage_stats')
     
-    @api.model
-    def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('coworking.membership') or _('New')
-        return super(CoworkingMembership, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('coworking.membership') or _('New')
+        return super(CoworkingMembership, self).create(vals_list)
     
     @api.depends('booking_ids', 'usage_ids')
     def _compute_usage_stats(self):

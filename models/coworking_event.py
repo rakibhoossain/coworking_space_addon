@@ -230,18 +230,19 @@ class CoworkingEventRegistration(models.Model):
         for registration in self:
             registration.is_free = registration.price == 0.0
     
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # Auto-set membership if partner has active membership
-        if vals.get('partner_id') and not vals.get('membership_id'):
-            membership = self.env['coworking.membership'].search([
-                ('partner_id', '=', vals['partner_id']),
-                ('state', '=', 'active')
-            ], limit=1)
-            if membership:
-                vals['membership_id'] = membership.id
-        
-        return super(CoworkingEventRegistration, self).create(vals)
+        for vals in vals_list:
+            if vals.get('partner_id') and not vals.get('membership_id'):
+                membership = self.env['coworking.membership'].search([
+                    ('partner_id', '=', vals['partner_id']),
+                    ('state', '=', 'active')
+                ], limit=1)
+                if membership:
+                    vals['membership_id'] = membership.id
+
+        return super(CoworkingEventRegistration, self).create(vals_list)
     
     def action_confirm(self):
         """Confirm the registration"""
