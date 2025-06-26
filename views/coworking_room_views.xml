@@ -73,7 +73,7 @@
                                         <field name="available_days"/>
                                     </group>
                                 </group>
-                                <group string="Custom Schedule" invisible="available_days != 'custom'">
+                                <group string="Custom Schedule" invisible="available_days not in ['custom']">
                                     <group>
                                         <field name="monday"/>
                                         <field name="tuesday"/>

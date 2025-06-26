@@ -26,9 +26,9 @@
             <field name="arch" type="xml">
                 <form string="Event">
                     <header>
-                        <button name="action_publish" string="Publish" type="object" class="oe_highlight" invisible="state != 'draft'"/>
-                        <button name="action_start" string="Start Event" type="object" class="oe_highlight" invisible="state != 'published'"/>
-                        <button name="action_complete" string="Complete" type="object" class="oe_highlight" invisible="state != 'ongoing'"/>
+                        <button name="action_publish" string="Publish" type="object" class="oe_highlight" invisible="state not in ['draft']"/>
+                        <button name="action_start" string="Start Event" type="object" class="oe_highlight" invisible="state not in ['published']"/>
+                        <button name="action_complete" string="Complete" type="object" class="oe_highlight" invisible="state not in ['ongoing']"/>
                         <button name="action_cancel" string="Cancel" type="object" invisible="state in ['completed', 'cancelled']"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,published,ongoing,completed"/>
                     </header>
@@ -188,8 +188,8 @@
             <field name="arch" type="xml">
                 <form string="Event Registration">
                     <header>
-                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'"/>
-                        <button name="action_attend" string="Mark as Attended" type="object" class="oe_highlight" invisible="state != 'confirmed'"/>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state not in ['draft']"/>
+                        <button name="action_attend" string="Mark as Attended" type="object" class="oe_highlight" invisible="state not in ['confirmed']"/>
                         <button name="action_cancel" string="Cancel" type="object" invisible="state in ['cancelled', 'attended']"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,attended"/>
                     </header>
