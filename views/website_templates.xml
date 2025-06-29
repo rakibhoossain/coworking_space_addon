@@ -105,10 +105,10 @@
                                                 <h5 class="event-title" t-field="event.name"/>
                                                 <div class="event-meta">
                                                     <i class="fa fa-clock-o"/> <span t-field="event.date_begin" t-options="{'widget': 'datetime'}"/>
-                                                    <span t-if="event.room_id"> • <span t-field="event.room_id.name"/></span>
+                                                    <span t-if="event.address_id"> • <span t-field="event.address_id.name"/></span>
                                                 </div>
                                                 <div class="event-price">
-                                                    <t t-if="event.is_free_for_members">Free for members</t>
+                                                    <t t-if="event.member_access == 'free'">Free for members</t>
                                                     <t t-else="">€<span t-field="event.non_member_price"/></t>
                                                 </div>
                                                 <a t-attf-href="/coworking/event/#{event.id}" class="btn btn-outline-primary btn-sm">Learn More</a>
@@ -302,13 +302,161 @@
                                             </div>
                                         </t>
                                         
-                                        <button type="button" id="btn_book_room" class="btn btn-primary btn-lg" disabled="">Book Room</button>
+                                        <button type="button" id="btn_book_room" class="btn btn-primary btn-lg">Book Room</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <script><![CDATA[
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const bookingForm = document.getElementById('booking-form');
+                        const dateInput = document.getElementById('booking_date');
+                        const durationSelect = document.getElementById('duration');
+                        const timeSlotsContainer = document.querySelector('.time-slots-container');
+                        const bookBtn = document.getElementById('btn_book_room');
+
+                        // Load available time slots when date or duration changes
+                        function loadTimeSlots() {
+                            const date = dateInput.value;
+                            const duration = durationSelect.value;
+
+                            if (!date) {
+                                timeSlotsContainer.innerHTML = '<div class="alert alert-info">Please select a date to view available time slots.</div>';
+                                return;
+                            }
+
+                            timeSlotsContainer.innerHTML = '<div class="alert alert-info">Loading available time slots...</div>';
+
+                            fetch('/coworking/api/booking/slots', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    jsonrpc: '2.0',
+                                    method: 'call',
+                                    params: {
+                                        room_id: <t t-out="room.id"/>,
+                                        date: date,
+                                        duration: parseInt(duration)
+                                    }
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.result && data.result.slots) {
+                                    displayTimeSlots(data.result.slots);
+                                } else {
+                                    timeSlotsContainer.innerHTML = '<div class="alert alert-warning">No available time slots for this date.</div>';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error loading time slots:', error);
+                                timeSlotsContainer.innerHTML = '<div class="alert alert-danger">Error loading time slots. Please try again.</div>';
+                            });
+                        }
+
+                        function displayTimeSlots(slots) {
+                            let html = '<div class="row">';
+                            slots.forEach(slot => {
+                                html += `
+                                    <div class="col-md-3 mb-2">
+                                        <button type="button" class="btn btn-outline-primary w-100 time-slot-btn"
+                                                data-start="${slot.start}" data-end="${slot.end}">
+                                            ${slot.start_time} - ${slot.end_time}
+                                        </button>
+                                    </div>
+                                `;
+                            });
+                            html += '</div>';
+                            timeSlotsContainer.innerHTML = html;
+
+                            // Add click handlers to time slot buttons
+                            document.querySelectorAll('.time-slot-btn').forEach(btn => {
+                                btn.addEventListener('click', function() {
+                                    // Remove active class from all buttons
+                                    document.querySelectorAll('.time-slot-btn').forEach(b => b.classList.remove('btn-primary'));
+                                    document.querySelectorAll('.time-slot-btn').forEach(b => b.classList.add('btn-outline-primary'));
+
+                                    // Add active class to clicked button
+                                    this.classList.remove('btn-outline-primary');
+                                    this.classList.add('btn-primary');
+
+                                    // Set hidden datetime fields
+                                    document.getElementById('start_datetime').value = this.dataset.start;
+                                    document.getElementById('end_datetime').value = this.dataset.end;
+
+                                    // Enable book button
+                                    bookBtn.disabled = false;
+                                });
+                            });
+                        }
+
+                        dateInput.addEventListener('change', loadTimeSlots);
+                        durationSelect.addEventListener('change', loadTimeSlots);
+
+                        // Handle booking button click
+                        bookBtn.addEventListener('click', function() {
+                            const startDatetime = document.getElementById('start_datetime').value;
+                            const endDatetime = document.getElementById('end_datetime').value;
+
+                            if (!startDatetime || !endDatetime) {
+                                alert('Please select a time slot');
+                                return;
+                            }
+
+                            const formData = {
+                                room_id: <t t-out="room.id"/>,
+                                start_datetime: startDatetime,
+                                end_datetime: endDatetime,
+                                purpose: document.getElementById('purpose').value,
+                                attendees_count: parseInt(document.getElementById('attendees_count').value)
+                            };
+
+                            // Add customer info if not logged in
+                            <t t-if="not membership">
+                                formData.customer_name = document.getElementById('customer_name').value;
+                                formData.customer_email = document.getElementById('customer_email').value;
+                                formData.customer_phone = document.getElementById('customer_phone').value;
+                            </t>
+
+                            bookBtn.disabled = true;
+                            bookBtn.textContent = 'Booking...';
+
+                            fetch('/coworking/api/booking/create', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    jsonrpc: '2.0',
+                                    method: 'call',
+                                    params: formData
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.result && data.result.success) {
+                                    alert(data.result.message);
+                                    window.location.href = '/coworking';
+                                } else {
+                                    alert(data.result ? data.result.error : 'An error occurred');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error creating booking:', error);
+                                alert('An error occurred while creating the booking');
+                            })
+                            .finally(() => {
+                                bookBtn.disabled = false;
+                                bookBtn.textContent = 'Book Room';
+                            });
+                        });
+                    });
+                ]]></script>
             </t>
         </template>
 
@@ -363,8 +511,8 @@
                                     <div class="col-md-6">
                                         <h5>Event Details</h5>
                                         <p><strong>Date:</strong> <span t-field="event.date_begin" t-options="{'widget': 'datetime'}"/></p>
-                                        <p><strong>Duration:</strong> <span t-field="event.duration"/> hours</p>
-                                        <p><strong>Location:</strong> <span t-field="event.location"/></p>
+                                        <p><strong>End Date:</strong> <span t-field="event.date_end" t-options="{'widget': 'datetime'}"/></p>
+                                        <p><strong>Location:</strong> <span t-field="event.address_id.name"/></p>
                                         <p><strong>Capacity:</strong> <span t-out="event.seats_max"/> people</p>
                                     </div>
                                     <div class="col-md-6">
@@ -432,7 +580,7 @@
                                             </ul>
                                         </div>
                                         <div class="card-footer text-center">
-                                            <a href="/web/signup" class="btn btn-primary">Choose Plan</a>
+                                            <button class="btn btn-primary subscribe-btn" t-att-data-plan-id="plan.id">Choose Plan</button>
                                         </div>
                                     </div>
                                 </div>
@@ -440,6 +588,57 @@
                         </div>
                     </div>
                 </div>
+
+                <script><![CDATA[
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.querySelectorAll('.subscribe-btn').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                const planId = this.dataset.planId;
+
+                                // Check if user is logged in
+                                if (!document.body.classList.contains('o_portal')) {
+                                    alert('Please log in to subscribe to a membership plan');
+                                    window.location.href = '/web/login?redirect=/coworking/membership';
+                                    return;
+                                }
+
+                                this.disabled = true;
+                                this.textContent = 'Subscribing...';
+
+                                fetch('/coworking/api/membership/subscribe', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        jsonrpc: '2.0',
+                                        method: 'call',
+                                        params: {
+                                            plan_id: parseInt(planId)
+                                        }
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.result && data.result.success) {
+                                        alert(data.result.message);
+                                        window.location.href = '/coworking';
+                                    } else {
+                                        alert(data.result ? data.result.error : 'An error occurred');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error subscribing to membership:', error);
+                                    alert('An error occurred while subscribing to membership');
+                                })
+                                .finally(() => {
+                                    this.disabled = false;
+                                    this.textContent = 'Choose Plan';
+                                });
+                            });
+                        });
+                    });
+                ]]></script>
             </t>
         </template>
 

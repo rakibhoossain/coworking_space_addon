@@ -47,7 +47,6 @@
             <field name="date_end" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d 20:00:00')"/>
             <field name="address_id" ref="base.main_company"/>
             <field name="seats_max">20</field>
-            <field name="is_coworking_event" eval="True"/>
             <field name="member_access">free</field>
             <field name="member_price">0.0</field>
             <field name="non_member_price">15.0</field>
@@ -61,7 +60,6 @@
             <field name="date_end" eval="(DateTime.now() + timedelta(days=14)).strftime('%Y-%m-%d 17:00:00')"/>
             <field name="address_id" ref="base.main_company"/>
             <field name="seats_max">12</field>
-            <field name="is_coworking_event" eval="True"/>
             <field name="member_access">discounted</field>
             <field name="member_price">25.0</field>
             <field name="non_member_price">50.0</field>

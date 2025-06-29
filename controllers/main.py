@@ -12,12 +12,16 @@ _logger = logging.getLogger(__name__)
 
 class CoworkingSpaceController(http.Controller):
 
+    @http.route('/', type='http', auth='public', website=True)
+    def website_home(self, **kwargs):
+        """Redirect homepage to coworking page"""
+        return request.redirect('/coworking')
+
     @http.route('/coworking', type='http', auth='public', website=True)
     def coworking_home(self, **kwargs):
         """Coworking space home page"""
         rooms = request.env['coworking.room'].sudo().search([('active', '=', True)])
-        events = request.env['coworking.event'].sudo().search([
-            ('state', '=', 'published'),
+        events = request.env['event.event'].sudo().search([
             ('date_begin', '>', datetime.now())
         ], limit=6, order='date_begin')
         
@@ -71,8 +75,7 @@ class CoworkingSpaceController(http.Controller):
     @http.route('/coworking/events', type='http', auth='public', website=True)
     def event_list(self, **kwargs):
         """List all published events"""
-        events = request.env['coworking.event'].sudo().search([
-            ('state', '=', 'published'),
+        events = request.env['event.event'].sudo().search([
             ('date_begin', '>', datetime.now())
         ], order='date_begin')
         
@@ -83,8 +86,8 @@ class CoworkingSpaceController(http.Controller):
     @http.route('/coworking/event/<int:event_id>', type='http', auth='public', website=True)
     def event_detail(self, event_id, **kwargs):
         """Event detail page"""
-        event = request.env['coworking.event'].sudo().browse(event_id)
-        if not event.exists() or event.state != 'published':
+        event = request.env['event.event'].sudo().browse(event_id)
+        if not event.exists():
             return request.not_found()
         
         # Get user's active membership if logged in
@@ -240,14 +243,14 @@ class CoworkingSpaceController(http.Controller):
     def register_for_event(self, event_id, **kwargs):
         """Register for an event"""
         try:
-            event = request.env['coworking.event'].sudo().browse(event_id)
-            if not event.exists() or event.state != 'published':
+            event = request.env['event.event'].sudo().browse(event_id)
+            if not event.exists():
                 return {'error': 'Event not found or not available for registration'}
             
             partner = request.env.user.partner_id
             
             # Check if already registered
-            existing_registration = request.env['coworking.event.registration'].sudo().search([
+            existing_registration = request.env['event.registration'].sudo().search([
                 ('event_id', '=', event_id),
                 ('partner_id', '=', partner.id)
             ], limit=1)
@@ -255,27 +258,17 @@ class CoworkingSpaceController(http.Controller):
             if existing_registration:
                 return {'error': 'You are already registered for this event'}
             
-            # Get membership
-            membership = request.env['coworking.membership'].sudo().search([
-                ('partner_id', '=', partner.id),
-                ('state', '=', 'active')
-            ], limit=1)
-            
             # Create registration
             registration_vals = {
                 'event_id': event_id,
                 'partner_id': partner.id,
-                'membership_id': membership.id if membership else False,
             }
-            
-            registration = request.env['coworking.event.registration'].sudo().create(registration_vals)
-            
-            # Auto-confirm if free or member
-            if registration.is_free:
-                registration.action_confirm()
-                message = 'Registration confirmed successfully!'
-            else:
-                message = 'Registration created. Payment required to confirm.'
+
+            registration = request.env['event.registration'].sudo().create(registration_vals)
+
+            # Auto-confirm registration (Odoo's event registration workflow)
+            registration.action_confirm()
+            message = 'Registration confirmed successfully!'
             
             return {
                 'success': True,
@@ -287,3 +280,43 @@ class CoworkingSpaceController(http.Controller):
         except Exception as e:
             _logger.error(f'Error registering for event: {e}')
             return {'error': 'An error occurred during registration'}
+
+    @http.route('/coworking/api/membership/subscribe', type='json', auth='user', methods=['POST'], csrf=False)
+    def subscribe_to_membership(self, plan_id, **kwargs):
+        """Subscribe to a membership plan"""
+        try:
+            plan = request.env['coworking.membership.plan'].sudo().browse(plan_id)
+            if not plan.exists() or not plan.active:
+                return {'error': 'Membership plan not found or not available'}
+
+            partner = request.env.user.partner_id
+
+            # Check if user already has an active membership
+            existing_membership = request.env['coworking.membership'].sudo().search([
+                ('partner_id', '=', partner.id),
+                ('state', '=', 'active')
+            ], limit=1)
+
+            if existing_membership:
+                return {'error': 'You already have an active membership'}
+
+            # Create membership
+            membership_vals = {
+                'partner_id': partner.id,
+                'plan_id': plan_id,
+                'start_date': datetime.now().date(),
+            }
+
+            membership = request.env['coworking.membership'].sudo().create(membership_vals)
+            membership.action_activate()
+
+            return {
+                'success': True,
+                'message': 'Membership subscription successful!',
+                'membership_id': membership.id,
+                'membership_ref': membership.name,
+            }
+
+        except Exception as e:
+            _logger.error(f'Error subscribing to membership: {e}')
+            return {'error': 'An error occurred while subscribing to membership'}

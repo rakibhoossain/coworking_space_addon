@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Website Configuration -->
+        <!-- Note: Homepage URL can be set manually in Website Settings -->
+        
+        <!-- Add Website Coworking Menu -->
+        <record id="website_menu_coworking_main" model="website.menu">
+            <field name="name">Coworking</field>
+            <field name="url">/coworking</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="website_menu_coworking_rooms" model="website.menu">
+            <field name="name">Rooms</field>
+            <field name="url">/coworking/rooms</field>
+            <field name="parent_id" ref="website_menu_coworking_main"/>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="website_menu_coworking_events" model="website.menu">
+            <field name="name">Events</field>
+            <field name="url">/coworking/events</field>
+            <field name="parent_id" ref="website_menu_coworking_main"/>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="website_menu_coworking_membership" model="website.menu">
+            <field name="name">Membership</field>
+            <field name="url">/coworking/membership</field>
+            <field name="parent_id" ref="website_menu_coworking_main"/>
+            <field name="sequence">30</field>
+        </record>
+        
+    </data>
+</odoo>

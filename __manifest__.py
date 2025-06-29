@@ -78,6 +78,7 @@ Subscription Plans:
         # Data - Load after views
         'data/coworking_data.xml',
         'data/subscription_plans.xml',
+        'data/website_data.xml',
         'data/email_templates.xml',
 
         # Website Templates - Load last
