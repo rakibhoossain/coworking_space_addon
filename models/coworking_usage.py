@@ -27,7 +27,7 @@ class CoworkingUsage(models.Model):
     
     # Related Records
     booking_id = fields.Many2one('coworking.booking', string='Related Booking')
-    event_registration_id = fields.Many2one('coworking.event.registration', string='Related Event Registration')
+    event_registration_id = fields.Many2one('event.registration', string='Related Event Registration')
     
     # Description
     description = fields.Text(string='Description')

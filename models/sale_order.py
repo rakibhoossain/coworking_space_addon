@@ -22,5 +22,5 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     booking_id = fields.Many2one('coworking.booking', string='Related Booking')
-    event_registration_id = fields.Many2one('coworking.event.registration', string='Related Event Registration')
+    event_registration_id = fields.Many2one('event.registration', string='Related Event Registration')
     membership_id = fields.Many2one('coworking.membership', string='Related Membership')

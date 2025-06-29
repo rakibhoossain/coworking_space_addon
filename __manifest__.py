@@ -103,4 +103,5 @@ Subscription Plans:
     'application': True,
     'sequence': 10,
     'images': ['static/description/banner.png'],
+    'uninstall_hook': 'uninstall_hook',
 }

@@ -232,7 +232,7 @@ class GenerateMonthlyInvoicesWizard(models.TransientModel):
         lines = []
         
         # Get paid event registrations for the period
-        registrations = self.env['coworking.event.registration'].search([
+        registrations = self.env['event.registration'].search([
             ('membership_id', '=', membership.id),
             ('state', 'in', ['confirmed', 'attended']),
             ('registration_date', '>=', self.period_start),

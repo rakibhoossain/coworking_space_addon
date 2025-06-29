@@ -171,7 +171,7 @@ class CoworkingInvoiceGenerator(models.Model):
         lines = []
         
         # Get event registrations for the period
-        registrations = self.env['coworking.event.registration'].search([
+        registrations = self.env['event.registration'].search([
             ('membership_id', '=', membership.id),
             ('state', 'in', ['confirmed', 'attended']),
             ('registration_date', '>=', self.date_from),

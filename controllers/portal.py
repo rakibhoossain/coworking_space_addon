@@ -22,7 +22,7 @@ class CoworkingPortal(CustomerPortal):
             values['booking_count'] = booking_count
         
         if 'event_count' in counters:
-            event_count = request.env['coworking.event.registration'].search_count([
+            event_count = request.env['event.registration'].search_count([
                 ('partner_id', '=', partner.id)
             ])
             values['event_count'] = event_count
@@ -52,7 +52,7 @@ class CoworkingPortal(CustomerPortal):
         ], limit=5, order='start_datetime desc')
         
         # Get upcoming events
-        upcoming_events = request.env['coworking.event.registration'].search([
+        upcoming_events = request.env['event.registration'].search([
             ('partner_id', '=', partner.id),
             ('event_id.date_begin', '>', datetime.now()),
             ('state', 'in', ['confirmed', 'draft'])
@@ -142,7 +142,7 @@ class CoworkingPortal(CustomerPortal):
         domain = [('partner_id', '=', partner.id)]
         
         # Count and pager
-        registration_count = request.env['coworking.event.registration'].search_count(domain)
+        registration_count = request.env['event.registration'].search_count(domain)
         pager = portal_pager(
             url='/my/events',
             total=registration_count,
@@ -151,7 +151,7 @@ class CoworkingPortal(CustomerPortal):
         )
         
         # Get registrations
-        registrations = request.env['coworking.event.registration'].search(
+        registrations = request.env['event.registration'].search(
             domain, 
             order='event_id.date_begin desc', 
             limit=self._items_per_page, 
@@ -271,7 +271,7 @@ class CoworkingPortal(CustomerPortal):
         ])
         
         # Total events attended
-        stats['total_events'] = request.env['coworking.event.registration'].search_count([
+        stats['total_events'] = request.env['event.registration'].search_count([
             ('partner_id', '=', partner.id),
             ('state', '=', 'attended')
         ])
